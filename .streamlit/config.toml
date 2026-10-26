@@ -1,0 +1,29 @@
+# ─────────────────────────────────────────────
+# Aura Farming — Streamlit theme configuration
+# ─────────────────────────────────────────────
+
+[theme]
+# Base theme — light provides the best foundation
+# for the Aura Farming botanical color palette.
+base                = "light"
+
+# Primary brand color (Deep Oak Green)
+primaryColor        = "#3A5A40"
+
+# Main page background (Cream)
+backgroundColor     = "#F5F1E8"
+
+# Card and widget background (Soft White)
+secondaryBackgroundColor = "#FFFEFA"
+
+# Body text (Dark Earth Brown)
+textColor           = "#4A403A"
+
+# Font — sans-serif matches the clean botanical aesthetic
+font                = "sans serif"
+
+[server]
+# Prevent Streamlit from opening a browser tab automatically
+# during development — comment out if you prefer auto-open.
+headless            = false
+port                = 8501

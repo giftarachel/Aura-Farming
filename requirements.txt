@@ -1,0 +1,60 @@
+# ─────────────────────────────────────────────────────────────────
+# Aura Farming — requirements.txt
+# Phase 4: Model Training
+#
+# INSTALLATION:
+#   python -m venv .venv
+#   source .venv/bin/activate          # macOS / Linux
+#   pip install --upgrade pip
+#   pip install -r requirements.txt
+#
+# ⚠ TENSORFLOW / PYTHON VERSION NOTE:
+#   TensorFlow officially supports Python 3.9 – 3.12.
+#   This project uses Python 3.14, which is NOT officially supported
+#   by any current TensorFlow release.
+#
+#   RECOMMENDED: train on Google Colab (Python 3.10/3.11, free T4 GPU)
+#   or create a separate Python 3.12 venv for training only.
+#
+#   macOS Apple Silicon (M1/M2/M3) with Python 3.10–3.12:
+#     pip install tensorflow-macos tensorflow-metal
+#   Standard Linux/Windows with Python 3.10–3.12:
+#     pip install tensorflow
+#
+#   See README.md → "Training Setup" for full instructions.
+# ─────────────────────────────────────────────────────────────────
+
+# ── Web application ────────────────────────────────────────────────
+streamlit>=1.32.0,<2.0.0
+
+# ── Image processing ──────────────────────────────────────────────
+Pillow>=10.2.0,<11.0.0
+opencv-python-headless>=4.9.0,<5.0.0
+
+# ── Configuration parsing ──────────────────────────────────────────
+PyYAML>=6.0.1,<7.0.0
+
+# ── Utilities ─────────────────────────────────────────────────────
+numpy>=1.26.0,<2.0.0
+
+# ── Testing ───────────────────────────────────────────────────────
+pytest>=8.0.0,<9.0.0
+pytest-cov>=5.0.0,<6.0.0
+
+# ── Phase 3: Dataset utilities ────────────────────────────────────
+imagehash>=4.3.1,<5.0.0    # Perceptual hashing for near-duplicate detection
+tqdm>=4.66.0,<5.0.0        # Progress bars for long-running dataset scripts
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 4: Training dependencies
+# Install in a Python 3.10–3.12 environment only.
+# ─────────────────────────────────────────────────────────────────
+# Standard (Linux/Windows, Python 3.10–3.12):
+#   pip install tensorflow>=2.16.0,<2.18.0
+#
+# Apple Silicon (macOS arm64, Python 3.10–3.12):
+#   pip install tensorflow-macos>=2.16.0,<2.18.0 tensorflow-metal>=1.1.0
+#
+scikit-learn>=1.4.0,<2.0.0
+matplotlib>=3.8.0,<4.0.0
+seaborn>=0.13.0,<1.0.0

@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────
+# Aura Farming — .gitignore
+# ─────────────────────────────────────────────
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.manifest
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# ─── Datasets (never commit raw image data) ───
+data/
+datasets/
+
+# ─── Trained model artifacts ───────────────────
+# .keras and .h5 files can be hundreds of MB.
+# Store them in models/ locally and share via
+# Google Drive, Hugging Face Hub, or similar.
+models/*.keras
+models/*.h5
+models/*.pkl
+models/*.json
+# Keep the README that explains where models live
+!models/README.md
+
+# ─── Experiment reports and generated figures ──
+reports/figures/
+reports/*.csv
+reports/*.png
+reports/*.pdf
+# Keep the README
+!reports/README.md
+
+# ─── Secrets and environment files ─────────────
+.env
+.env.*
+secrets.yaml
+credentials.json
+
+# ─── macOS system files ─────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ─── Editor and IDE files ───────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ─── pytest and coverage ────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ─── Streamlit cache ────────────────────────────
+.streamlit/secrets.toml

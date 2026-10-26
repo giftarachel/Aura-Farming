@@ -1,0 +1,106 @@
+# ─────────────────────────────────────────────────────────────────
+# Aura Farming — Central Configuration
+# ─────────────────────────────────────────────────────────────────
+# All thresholds, paths, seeds, and model parameters are defined
+# here. Application code reads from this file rather than using
+# hardcoded values. Update this file as each phase progresses.
+# ─────────────────────────────────────────────────────────────────
+
+project:
+  name: "Aura Farming"
+  version: "0.4.0"   # Phase 4 — Model Training
+  phase: 4
+
+# ── Image upload ─────────────────────────────────────────────────
+upload:
+  max_file_size_mb: 20
+  supported_formats:
+    - "jpg"
+    - "jpeg"
+    - "png"
+    - "webp"
+  min_dimension_px: 64      # Reject images smaller than this in either dimension
+  max_dimension_px: 8000    # Reject unreasonably large images
+
+# ── Image quality gate (Phase 5) ─────────────────────────────────
+# These thresholds are placeholders. Final values will be selected
+# using validation data during Phase 5 and recorded here.
+quality:
+  blur_laplacian_threshold: 100.0   # Below this → image is too blurry
+  brightness_min: 30                # 0–255 scale; below this → too dark
+  brightness_max: 225               # Above this → too bright / overexposed
+
+# ── Model (Phase 4+) ─────────────────────────────────────────────
+model:
+  architecture: "MobileNetV3Small"
+  input_size: [224, 224]
+  input_channels: 3
+  # Path to the trained model file (relative to project root)
+  # Leave as null until a trained model is available.
+  weights_path: "models/mobilenetv3_phase_a.keras"   # Phase A checkpoint — do not overwrite
+  calibration_path: null       # e.g. "models/mobilenetv3_calibration.json"
+
+# ── Prediction and abstention (Phase 5) ──────────────────────────
+prediction:
+  # Tentative selective-accuracy research target: 85%
+  # The actual threshold value will be selected on the validation
+  # set during Phase 5. Do not treat this value as final.
+  confidence_threshold: null   # Will be set after calibration
+
+# ── Dataset (Phase 3) ────────────────────────────────────────────
+dataset:
+  random_seed: 42
+  train_ratio: 0.70
+  val_ratio:   0.15
+  test_ratio:  0.15
+  # Paths are relative to project root (not committed to git)
+  plantvillage_dir: "data/plantvillage"
+  plantdoc_dir:     "data/plantdoc"
+  splits_dir:       "data/splits"
+  reports_dir:      "data/reports"
+
+  # ── PlantVillage variant to use ──────────────────────────────
+  # Options: "color" | "grayscale" | "segmented"
+  # "color" is recommended for this project — matches real-world
+  # photographs and is the variant used in the original paper.
+  plantvillage_variant: "color"
+
+  # ── Duplicate detection ──────────────────────────────────────
+  # Perceptual hash size: larger = more precise but slower
+  phash_size: 8
+  # Hamming distance threshold for near-duplicate flagging
+  # 0 = exact hash match only; 4–6 = visually similar threshold
+  phash_threshold: 4
+
+  # ── Minimum images per class to be included in a split ───────
+  # Classes with fewer than this many images after deduplication
+  # will be flagged for review rather than silently dropped.
+  min_images_per_class: 50
+
+# ── Evaluation (Phase 7) ─────────────────────────────────────────
+evaluation:
+  ece_num_bins: 10
+  reports_dir: "reports"
+
+# ── Training (Phase 4) ───────────────────────────────────────────
+training:
+  # Phase A — feature extraction (frozen base)
+  phase_a_epochs: 30
+  phase_a_patience: 5        # EarlyStopping patience (epochs)
+  phase_a_lr: 0.001          # Adam learning rate
+
+  # Phase B — fine-tuning (optional, requires --fine-tune flag)
+  phase_b_epochs: 20
+  phase_b_patience: 7
+  phase_b_lr: 0.00001        # Lower LR to preserve ImageNet features
+  fine_tune_at: 100          # Unfreeze base layers from this index onward
+
+  # Shared settings
+  batch_size: 32
+  dropout_rate: 0.3
+  augment: true
+
+  # Output paths (relative to project root)
+  checkpoint_phase_a: "models/mobilenetv3_phase_a.keras"
+  checkpoint_phase_b: "models/mobilenetv3_baseline.keras"
+  history_dir: "reports"

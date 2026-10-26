@@ -1,0 +1,118 @@
+{
+  "_comment": "Aura Farming — Tomato Disease Class Mapping",
+  "_status": "VERIFIED — Folder names confirmed from PlantVillage GitHub repository (raw/color/) via GitHub API. Integer indices are project-defined (0-based, alphabetical by folder name). Final counts must be confirmed by running training/inspect_dataset.py against the downloaded dataset.",
+  "_license": "PlantVillage dataset: CC BY-SA 3.0. Cite: Mohanty, Hughes & Salathe (2016), Frontiers in Plant Science, doi:10.3389/fpls.2016.01419",
+  "_download": "Recommended: Hugging Face Hub — load_dataset('mohanty/PlantVillage', 'color'). Alternative: git clone https://github.com/spMohanty/PlantVillage-Dataset then find images under raw/color/",
+  "_variant": "color (RGB, lab-controlled background, 256x256 px JPEG)",
+  "_index_procedure": "Indices are assigned alphabetically by PlantVillage folder name. The training pipeline must use this mapping explicitly — never infer indices from os.listdir() sort order. This file is the single source of truth for label indices.",
+
+  "classes": {
+    "0": {
+      "folder_name": "Tomato___Bacterial_spot",
+      "display_name": "Tomato — Bacterial Spot",
+      "crop": "Tomato",
+      "condition": "Bacterial Spot",
+      "approx_images": 2127,
+      "notes": "GitHub API returns 1000 max; actual count confirmed locally by inspect_dataset.py"
+    },
+    "1": {
+      "folder_name": "Tomato___Early_blight",
+      "display_name": "Tomato — Early Blight",
+      "crop": "Tomato",
+      "condition": "Early Blight",
+      "approx_images": 1000,
+      "notes": "GitHub API returned exactly 1000 — may be capped. Actual count confirmed locally."
+    },
+    "2": {
+      "folder_name": "Tomato___Late_blight",
+      "display_name": "Tomato — Late Blight",
+      "crop": "Tomato",
+      "condition": "Late Blight",
+      "approx_images": 1909,
+      "notes": ""
+    },
+    "3": {
+      "folder_name": "Tomato___Leaf_Mold",
+      "display_name": "Tomato — Leaf Mold",
+      "crop": "Tomato",
+      "condition": "Leaf Mold",
+      "approx_images": 952,
+      "notes": "Note: 'Mold' capitalised, 'Leaf' capitalised in folder name"
+    },
+    "4": {
+      "folder_name": "Tomato___Septoria_leaf_spot",
+      "display_name": "Tomato — Septoria Leaf Spot",
+      "crop": "Tomato",
+      "condition": "Septoria Leaf Spot",
+      "approx_images": 1771,
+      "notes": "Note: lowercase 'leaf_spot' in folder name"
+    },
+    "5": {
+      "folder_name": "Tomato___Spider_mites Two-spotted_spider_mite",
+      "display_name": "Tomato — Spider Mites (Two-spotted)",
+      "crop": "Tomato",
+      "condition": "Spider Mites",
+      "approx_images": 1676,
+      "notes": "CRITICAL: folder name contains a SPACE between 'mites' and 'Two-spotted'. Must be handled carefully in path construction."
+    },
+    "6": {
+      "folder_name": "Tomato___Target_Spot",
+      "display_name": "Tomato — Target Spot",
+      "crop": "Tomato",
+      "condition": "Target Spot",
+      "approx_images": 1404,
+      "notes": ""
+    },
+    "7": {
+      "folder_name": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "display_name": "Tomato — Yellow Leaf Curl Virus",
+      "crop": "Tomato",
+      "condition": "Yellow Leaf Curl Virus",
+      "approx_images": 5357,
+      "notes": "Largest class — significant class imbalance risk"
+    },
+    "8": {
+      "folder_name": "Tomato___Tomato_mosaic_virus",
+      "display_name": "Tomato — Mosaic Virus",
+      "crop": "Tomato",
+      "condition": "Tomato Mosaic Virus",
+      "approx_images": 373,
+      "notes": "Smallest class — only 373 images. Monitor for class imbalance during training."
+    },
+    "9": {
+      "folder_name": "Tomato___healthy",
+      "display_name": "Tomato — Healthy",
+      "crop": "Tomato",
+      "condition": "Healthy",
+      "approx_images": 1591,
+      "notes": "Note: lowercase 'healthy' in folder name"
+    }
+  },
+
+  "plantdoc_label_map": {
+    "_comment": "Maps PlantDoc label strings to Aura Farming class indices (0–9). To be verified in Phase 3 after PlantDoc label inspection. Not used until Phase 7 generalization evaluation.",
+    "_status": "PROPOSED — not yet verified against actual PlantDoc labels",
+    "Tomato Early blight leaf": 1,
+    "Tomato Late blight leaf": 2,
+    "Tomato leaf bacterial spot": 0,
+    "Tomato leaf mosaic virus": 8,
+    "Tomato leaf yellow virus": 7,
+    "Tomato mold leaf": 3,
+    "Tomato Septoria leaf spot": 4,
+    "Tomato two spotted spider mites leaf": 5,
+    "Tomato leaf": 9
+  },
+
+  "folder_to_index": {
+    "Tomato___Bacterial_spot": 0,
+    "Tomato___Early_blight": 1,
+    "Tomato___Late_blight": 2,
+    "Tomato___Leaf_Mold": 3,
+    "Tomato___Septoria_leaf_spot": 4,
+    "Tomato___Spider_mites Two-spotted_spider_mite": 5,
+    "Tomato___Target_Spot": 6,
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": 7,
+    "Tomato___Tomato_mosaic_virus": 8,
+    "Tomato___healthy": 9
+  }
+}
