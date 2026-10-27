@@ -90,8 +90,13 @@ def remap_manifest_paths(
                     "Re-run training/prepare_dataset.py to regenerate manifests."
                 )
 
-            filename = Path(row["path"]).name
-            colab_path = str(colab_dataset_root / class_folder / filename)
+            # Robust filename extraction: handles Windows (\) and Mac/Linux (/)
+            raw_path = str(row["path"]).replace("\\", "/")
+            filename = raw_path.split("/")[-1]
+
+            # Colab is always Linux; ensure forward slashes regardless of host OS
+            colab_root_str = str(colab_dataset_root).replace("\\", "/")
+            colab_path = f"{colab_root_str.rstrip('/')}/{class_folder}/{filename}"
             remapped.append(colab_path)
 
             try:

@@ -8,8 +8,8 @@
 
 project:
   name: "Aura Farming"
-  version: "0.4.0"   # Phase 4 — Model Training
-  phase: 4
+  version: "0.7.0"   # Phase 7 — Scientific Evaluation
+  phase: 7
 
 # ── Image upload ─────────────────────────────────────────────────
 upload:
@@ -37,15 +37,22 @@ model:
   input_channels: 3
   # Path to the trained model file (relative to project root)
   # Leave as null until a trained model is available.
-  weights_path: "models/mobilenetv3_phase_a.keras"   # Phase A checkpoint — do not overwrite
-  calibration_path: null       # e.g. "models/mobilenetv3_calibration.json"
+  weights_path: "models/mobilenetv3_baseline.keras"
+  calibration_path: "models/mobilenetv3_calibration.json"
 
 # ── Prediction and abstention (Phase 5) ──────────────────────────
 prediction:
-  # Tentative selective-accuracy research target: 85%
-  # The actual threshold value will be selected on the validation
-  # set during Phase 5. Do not treat this value as final.
-  confidence_threshold: null   # Will be set after calibration
+  # Reliability thresholds (calibrated confidence and top-1/top-2 margin)
+  confidence_threshold: 0.70   # Confident threshold (>= 70%)
+  abstention_threshold: 0.40   # Abstention threshold (< 40% -> withhold diagnosis)
+  margin_threshold: 0.05       # Minimum difference between top-1 and top-2
+  temperature: 1.0             # Fallback temperature when uncalibrated
+
+# ── Grad-CAM Explainability (Phase 5) ────────────────────────────
+gradcam:
+  layer_name: null             # null = auto-detect final conv feature map
+  alpha: 0.4                   # Heatmap overlay opacity (0.0–1.0)
+  colormap: "JET"              # Visual colormap for heatmap intensity
 
 # ── Dataset (Phase 3) ────────────────────────────────────────────
 dataset:

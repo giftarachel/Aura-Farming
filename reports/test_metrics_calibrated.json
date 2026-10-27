@@ -1,0 +1,55 @@
+{
+  "checkpoint": "mobilenetv3_baseline.keras",
+  "test_samples": 2724,
+  "accuracy": 0.9725,
+  "macro_f1": 0.9642,
+  "roc_auc_macro": 0.9995,
+  "reliability_analysis": {
+    "temperature_applied": 0.8036,
+    "uncalibrated_metrics": {
+      "ece": 0.0045,
+      "nll": 0.0725,
+      "brier_score": 0.0378
+    },
+    "calibrated_metrics": {
+      "ece": 0.0089,
+      "nll": 0.0742,
+      "brier_score": 0.0382,
+      "ece_reduction_percent": -98.71
+    },
+    "confidence_distribution": {
+      "mean": 0.9802,
+      "median": 1.0,
+      "std": 0.0717,
+      "min": 0.3587,
+      "max": 1.0,
+      "mean_margin": 0.9629
+    },
+    "abstention_policy": {
+      "confidence_threshold": 0.7,
+      "abstention_threshold": 0.4,
+      "margin_threshold": 0.05,
+      "counts": {
+        "total": 2724,
+        "confident": 2666,
+        "uncertain": 57,
+        "abstained": 1,
+        "retained": 2723
+      },
+      "proportions": {
+        "coverage": 0.9996,
+        "abstention_rate": 0.0004,
+        "confident_rate": 0.9787,
+        "uncertain_rate": 0.0209
+      },
+      "accuracies": {
+        "full_population": 0.9725,
+        "selective_accuracy": 0.9728,
+        "selective_accuracy_gain": 0.0004,
+        "confident_accuracy": 0.985,
+        "uncertain_accuracy": 0.4035,
+        "abstained_hypothetical_accuracy": 0.0
+      }
+    }
+  }
+}

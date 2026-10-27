@@ -144,6 +144,19 @@ class TestRemapManifestPaths:
         assert "Leaf 259.1.JPG" in paths[0]
         assert paths[0].startswith(self.COLAB_ROOT)
 
+    def test_windows_paths_handled(self, tmp_path):
+        """Windows manifest paths with drive letter and backslashes must remap correctly to POSIX."""
+        win_path = r"D:\College Files\Year 2\Aura Farming\data\plantvillage\color\Tomato___healthy\leaf 123.JPG"
+        rows = [
+            {"path": win_path, "class_index": 9, "class_folder": "Tomato___healthy"},
+        ]
+        manifest = self._make_manifest(tmp_path, rows)
+        paths, _ = remap_manifest_paths(manifest, Path(self.COLAB_ROOT))
+        assert "leaf 123.JPG" in paths[0]
+        assert paths[0].startswith(self.COLAB_ROOT)
+        assert "\\" not in paths[0]
+        assert paths[0] == f"{self.COLAB_ROOT}/Tomato___healthy/leaf 123.JPG"
+
     def test_special_class_folder_with_space(self, tmp_path):
         """Spider mites folder name contains a space."""
         folder = "Tomato___Spider_mites Two-spotted_spider_mite"

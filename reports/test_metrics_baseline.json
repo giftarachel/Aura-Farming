@@ -1,0 +1,303 @@
+{
+  "accuracy": 0.9725,
+  "macro_precision": 0.958,
+  "macro_recall": 0.9712,
+  "macro_f1": 0.9642,
+  "weighted_precision": 0.973,
+  "weighted_recall": 0.9725,
+  "weighted_f1": 0.9726,
+  "roc_auc_macro": 0.9995,
+  "per_class": {
+    "Tomato \u2014 Bacterial Spot": {
+      "class_index": 0,
+      "support": 318,
+      "correct": 314,
+      "errors": 4,
+      "precision": 0.9752,
+      "recall": 0.9874,
+      "f1_score": 0.9812
+    },
+    "Tomato \u2014 Early Blight": {
+      "class_index": 1,
+      "support": 150,
+      "correct": 141,
+      "errors": 9,
+      "precision": 0.9097,
+      "recall": 0.94,
+      "f1_score": 0.9246
+    },
+    "Tomato \u2014 Late Blight": {
+      "class_index": 2,
+      "support": 287,
+      "correct": 279,
+      "errors": 8,
+      "precision": 0.9824,
+      "recall": 0.9721,
+      "f1_score": 0.9772
+    },
+    "Tomato \u2014 Leaf Mold": {
+      "class_index": 3,
+      "support": 143,
+      "correct": 139,
+      "errors": 4,
+      "precision": 0.9456,
+      "recall": 0.972,
+      "f1_score": 0.9586
+    },
+    "Tomato \u2014 Septoria Leaf Spot": {
+      "class_index": 4,
+      "support": 265,
+      "correct": 249,
+      "errors": 16,
+      "precision": 0.9765,
+      "recall": 0.9396,
+      "f1_score": 0.9577
+    },
+    "Tomato \u2014 Spider Mites (Two-spotted)": {
+      "class_index": 5,
+      "support": 250,
+      "correct": 242,
+      "errors": 8,
+      "precision": 0.9416,
+      "recall": 0.968,
+      "f1_score": 0.9546
+    },
+    "Tomato \u2014 Target Spot": {
+      "class_index": 6,
+      "support": 211,
+      "correct": 201,
+      "errors": 10,
+      "precision": 0.9481,
+      "recall": 0.9526,
+      "f1_score": 0.9504
+    },
+    "Tomato \u2014 Yellow Leaf Curl Virus": {
+      "class_index": 7,
+      "support": 806,
+      "correct": 790,
+      "errors": 16,
+      "precision": 0.9975,
+      "recall": 0.9801,
+      "f1_score": 0.9887
+    },
+    "Tomato \u2014 Mosaic Virus": {
+      "class_index": 8,
+      "support": 56,
+      "correct": 56,
+      "errors": 0,
+      "precision": 0.9032,
+      "recall": 1.0,
+      "f1_score": 0.9492
+    },
+    "Tomato \u2014 Healthy": {
+      "class_index": 9,
+      "support": 238,
+      "correct": 238,
+      "errors": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      314,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      1,
+      141,
+      3,
+      0,
+      3,
+      0,
+      1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      8,
+      279,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      139,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      3,
+      0,
+      5,
+      249,
+      1,
+      1,
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      242,
+      7,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      1,
+      8,
+      201,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      1,
+      1,
+      2,
+      0,
+      6,
+      1,
+      790,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      56,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      238
+    ]
+  ],
+  "classification_report": {
+    "Tomato \u2014 Bacterial Spot": {
+      "precision": 0.9751552795031055,
+      "recall": 0.9874213836477987,
+      "f1-score": 0.98125,
+      "support": 318.0
+    },
+    "Tomato \u2014 Early Blight": {
+      "precision": 0.9096774193548387,
+      "recall": 0.94,
+      "f1-score": 0.9245901639344263,
+      "support": 150.0
+    },
+    "Tomato \u2014 Late Blight": {
+      "precision": 0.9823943661971831,
+      "recall": 0.9721254355400697,
+      "f1-score": 0.9772329246935202,
+      "support": 287.0
+    },
+    "Tomato \u2014 Leaf Mold": {
+      "precision": 0.9455782312925171,
+      "recall": 0.972027972027972,
+      "f1-score": 0.9586206896551724,
+      "support": 143.0
+    },
+    "Tomato \u2014 Septoria Leaf Spot": {
+      "precision": 0.9764705882352941,
+      "recall": 0.939622641509434,
+      "f1-score": 0.9576923076923077,
+      "support": 265.0
+    },
+    "Tomato \u2014 Spider Mites (Two-spotted)": {
+      "precision": 0.9416342412451362,
+      "recall": 0.968,
+      "f1-score": 0.9546351084812623,
+      "support": 250.0
+    },
+    "Tomato \u2014 Target Spot": {
+      "precision": 0.9481132075471698,
+      "recall": 0.95260663507109,
+      "f1-score": 0.950354609929078,
+      "support": 211.0
+    },
+    "Tomato \u2014 Yellow Leaf Curl Virus": {
+      "precision": 0.9974747474747475,
+      "recall": 0.9801488833746899,
+      "f1-score": 0.9887359198998749,
+      "support": 806.0
+    },
+    "Tomato \u2014 Mosaic Virus": {
+      "precision": 0.9032258064516129,
+      "recall": 1.0,
+      "f1-score": 0.9491525423728814,
+      "support": 56.0
+    },
+    "Tomato \u2014 Healthy": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 238.0
+    },
+    "accuracy": 0.9724669603524229,
+    "macro avg": {
+      "precision": 0.9579723887301604,
+      "recall": 0.9711952951171053,
+      "f1-score": 0.9642264266658523,
+      "support": 2724.0
+    },
+    "weighted avg": {
+      "precision": 0.9730125941889359,
+      "recall": 0.9724669603524229,
+      "f1-score": 0.9725845770058321,
+      "support": 2724.0
+    }
+  },
+  "checkpoint": "mobilenetv3_baseline.keras",
+  "test_samples": 2724,
+  "inference_time_sec": 9.479,
+  "ms_per_image": 3.48
+}

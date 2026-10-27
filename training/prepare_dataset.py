@@ -47,9 +47,15 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 
-# ── Ensure project root is on the Python path ────────────────────
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 import yaml
 
@@ -146,6 +152,8 @@ def _normalize_path(raw: str, report_dataset_dir: Optional[str]) -> str:
     p = Path(raw)
     if p.is_absolute():
         return str(p)
+    if raw.startswith(("/", "\\")):
+        return raw
     return str(PROJECT_ROOT / p)
 
 

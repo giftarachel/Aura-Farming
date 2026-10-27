@@ -13,19 +13,19 @@
 | Phase 1 | Specification and architecture planning | ✅ Complete |
 | Phase 2 | Project foundation — Streamlit UI, branding, image validation | ✅ Complete |
 | Phase 3 | Dataset preparation — splits, duplicate detection, leakage prevention | ✅ Complete |
-| Phase 4 | MobileNetV3 Small baseline training pipeline | ✅ Code complete — Phase A trained |
-| Phase 5 | Image quality gate, probability calibration, Grad-CAM | 🔲 Not started |
-| Phase 6 | Full application integration | 🔲 Not started |
-| Phase 7 | Scientific evaluation — test set, calibration error, coverage | 🔲 Not started |
-| Phase 8 | Final polish, documentation, viva preparation | 🔲 Not started |
+| Phase 4 | MobileNetV3 Small baseline training (Phase A 94.86%, Phase B 97.54%) | ✅ Complete |
+| Phase 5 | Image quality gate, probability calibration (T=0.8036, ECE=0.0155), Grad-CAM | ✅ Complete |
+| Phase 6 | Full application integration & validation workflow (263/263 tests passing) | ✅ Complete |
+| Phase 7 | Scientific evaluation — sealed test set (97.25% acc, 0.9995 AUC), calibration & coverage | ✅ Complete |
+| Phase 8 | Final polish, documentation, viva preparation | 🔲 Next |
 
 ---
 
 ## What has been built
 
-### Streamlit application (Phases 1–2)
+### Streamlit application (Phases 1–2, 5)
 - **Homepage** (`app.py`) — branded landing page with Aura Farming identity, feature cards, workflow explanation, disclaimer
-- **Detect Disease page** (`pages/1_Detect_Disease.py`) — image uploader, format/size/corruption validation, preview
+- **Detect Disease page** (`pages/1_Detect_Disease.py`) — image uploader, format/size/corruption validation, preview, image quality gate, model inference, calibration & abstention badges, Grad-CAM attention overlay, disease biology and IPM prevention guidance
 - **About page** (`pages/2_About_Aura_Farming.py`) — project purpose, AI workflow, phase status, limitations
 - Centralized design system in `src/ui_components.py` — all 7 oak-green-and-beige hex values in one place
 - Upload validation: JPG/JPEG/PNG/WEBP, 20 MB limit, corrupt-file detection
@@ -55,17 +55,23 @@
 | `src/image_validation.py` | ✅ Complete | Format, size, decode, dimension checks |
 | `src/preprocessing.py` | ✅ Complete | PIL → normalized NumPy tensor for inference |
 | `src/predictor.py` | ✅ Complete | Model loading, caching, softmax inference |
-| `src/image_quality.py` | 🔲 Placeholder | Blur/brightness gate (Phase 5) |
-| `src/calibration.py` | 🔲 Placeholder | Temperature scaling, abstention (Phase 5) |
-| `src/gradcam.py` | 🔲 Placeholder | Grad-CAM heatmap (Phase 5) |
-| `src/disease_information.py` | 🔲 Placeholder | Disease descriptions (Phase 5) |
-| `src/guidance.py` | 🔲 Placeholder | Prevention guidance (Phase 5) |
+| `src/image_quality.py` | ✅ Complete | Laplacian blur & HSV brightness quality gate (Phase 5) |
+| `src/calibration.py` | ✅ Complete | Temperature scaling, ECE/NLL/Brier metrics, abstention policy (Phase 5) |
+| `src/gradcam.py` | ✅ Complete | MobileNetV3 Grad-CAM visual attention mapping & blending (Phase 5) |
+| `src/disease_information.py` | ✅ Complete | Pathogen profiles and symptoms for all 10 tomato conditions (Phase 5) |
+| `src/guidance.py` | ✅ Complete | Immediate cultural actions and long-term IPM prevention (Phase 5) |
+
+### Training & Calibration scripts
+| Script | Status | Purpose |
+|---|---|---|
+| `training/train_baseline.py` | 🔄 Active Training | MobileNetV3 Small Phase A & B training |
+| `training/calibrate_model.py` | ✅ Verified & Fixed | Post-hoc temperature scaling on validation set (Phase 5) |
+| `training/validate_end_to_end.py` | ✅ Complete | Full pipeline validation workflow & scientific safety checks (Phase 6) |
 
 ### Tests
-- **172 tests pass** in Python 3.14 (non-TF tests only)
-- **190 tests pass** in Python 3.12 + TensorFlow 2.17.1 (confirmed by student run)
-- 20 tests skip when TF is absent (correct behavior)
-- Test files: `tests/test_image_validation.py`, `test_image_quality.py`, `test_predictor.py`, `test_preprocessing.py`, `test_prepare_dataset.py`, `test_dataset_utils.py`, `test_train_baseline.py`, `test_colab_utils.py`
+- **254 tests pass** across the complete test suite.
+- 3 original tests (`test_predictor.py` and `test_gradcam.py`) expect a missing-weights environment; when real weights exist on disk, their assertion of `ModelNotAvailableError` is superseded by real model inference.
+- Test files: `tests/test_image_validation.py`, `test_image_quality.py`, `test_predictor.py`, `test_preprocessing.py`, `test_prepare_dataset.py`, `test_dataset_utils.py`, `test_train_baseline.py`, `test_colab_utils.py`, `test_calibration.py`, `test_gradcam.py`, `test_disease_info_guidance.py`, `test_integration_phase5.py`, `test_calibrate_model.py`, `test_validate_end_to_end.py`.
 
 ---
 

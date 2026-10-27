@@ -1,0 +1,19 @@
+{
+  "status": "dataset_not_available",
+  "evaluated": false,
+  "plantdoc_dir": "D:\\College Files\\Year 2\\Aura Farming\\data\\plantdoc",
+  "supported_classes": {
+    "Tomato Early blight leaf": 1,
+    "Tomato Late blight leaf": 2,
+    "Tomato leaf bacterial spot": 0,
+    "Tomato leaf mosaic virus": 8,
+    "Tomato leaf yellow virus": 7,
+    "Tomato mold leaf": 3,
+    "Tomato Septoria leaf spot": 4,
+    "Tomato two spotted spider mites leaf": 5,
+    "Tomato leaf": 9
+  },
+  "mapped_class_count": 9,
+  "target_spot_available": false,
+  "reason": "The PlantDoc dataset directory was not detected at data/plantdoc. Per project instructions and limited quota, automatic multi-gigabyte dataset downloads are withheld. The complete evaluation protocol, class mapping schema, and handling of domain shift are documented in reports/PLANTDOC_EVALUATION.md."
+}

@@ -61,45 +61,21 @@ def get_logo_svg(size: int = 48) -> str:
     Returns:
         A self-contained SVG string safe for st.markdown injection.
     """
-    return f"""
-    <svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}"
-         viewBox="0 0 64 64" fill="none" role="img"
-         aria-label="Aura Farming leaf logo">
-      <!-- Leaf body -->
-      <path d="M32 8 C18 8 8 22 8 36 C8 50 20 58 32 56
-               C44 58 56 50 56 36 C56 22 46 8 32 8 Z"
-            fill="{Colors.FOREST_GREEN}" opacity="0.92"/>
-      <!-- Centre vein -->
-      <line x1="32" y1="12" x2="32" y2="54"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="2.2"
-            stroke-linecap="round"/>
-      <!-- Left veins -->
-      <line x1="32" y1="28" x2="18" y2="22"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.4"
-            stroke-linecap="round" opacity="0.8"/>
-      <line x1="32" y1="38" x2="16" y2="34"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.4"
-            stroke-linecap="round" opacity="0.8"/>
-      <line x1="32" y1="46" x2="20" y2="44"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.2"
-            stroke-linecap="round" opacity="0.7"/>
-      <!-- Right veins -->
-      <line x1="32" y1="28" x2="46" y2="22"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.4"
-            stroke-linecap="round" opacity="0.8"/>
-      <line x1="32" y1="38" x2="48" y2="34"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.4"
-            stroke-linecap="round" opacity="0.8"/>
-      <line x1="32" y1="46" x2="44" y2="44"
-            stroke="{Colors.SAGE_GREEN}" stroke-width="1.2"
-            stroke-linecap="round" opacity="0.7"/>
-      <!-- AI node — subtle circuit dot at vein centre -->
-      <circle cx="32" cy="36" r="4"
-              fill="{Colors.SOFT_WHITE}" opacity="0.85"/>
-      <circle cx="32" cy="36" r="2"
-              fill="{Colors.SAGE_GREEN}"/>
-    </svg>
-    """
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" '
+        f'viewBox="0 0 64 64" fill="none" role="img" aria-label="Aura Farming leaf logo">'
+        f'<path d="M32 8 C18 8 8 22 8 36 C8 50 20 58 32 56 C44 58 56 50 56 36 C56 22 46 8 32 8 Z" fill="{Colors.FOREST_GREEN}" opacity="0.92"/>'
+        f'<line x1="32" y1="12" x2="32" y2="54" stroke="{Colors.SAGE_GREEN}" stroke-width="2.2" stroke-linecap="round"/>'
+        f'<line x1="32" y1="28" x2="18" y2="22" stroke="{Colors.SAGE_GREEN}" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>'
+        f'<line x1="32" y1="38" x2="16" y2="34" stroke="{Colors.SAGE_GREEN}" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>'
+        f'<line x1="32" y1="46" x2="20" y2="44" stroke="{Colors.SAGE_GREEN}" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>'
+        f'<line x1="32" y1="28" x2="46" y2="22" stroke="{Colors.SAGE_GREEN}" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>'
+        f'<line x1="32" y1="38" x2="48" y2="34" stroke="{Colors.SAGE_GREEN}" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>'
+        f'<line x1="32" y1="46" x2="44" y2="44" stroke="{Colors.SAGE_GREEN}" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>'
+        f'<circle cx="32" cy="36" r="4" fill="{Colors.SOFT_WHITE}" opacity="0.85"/>'
+        f'<circle cx="32" cy="36" r="2" fill="{Colors.SAGE_GREEN}"/>'
+        f'</svg>'
+    )
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -458,22 +434,17 @@ def render_navbar(active_page: str = "Home") -> None:
                      future active-link styling.
     """
     logo_svg = get_logo_svg(size=32)
-    st.markdown(
-        f"""
-        <div class="af-navbar">
-          <div class="af-navbar-brand">
-            {logo_svg}
-            <span>Aura Farming</span>
-          </div>
-          <nav class="af-navbar-links">
-            <a href="/" target="_self">Home</a>
-            <a href="/Detect_Disease" target="_self">Detect Disease</a>
-            <a href="/About_Aura_Farming" target="_self">About</a>
-          </nav>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    navbar_html = (
+        f'<div class="af-navbar">'
+        f'<div class="af-navbar-brand">{logo_svg}<span>Aura Farming</span></div>'
+        f'<nav class="af-navbar-links">'
+        f'<a href="/" target="_self">Home</a>'
+        f'<a href="/Detect_Disease" target="_self">Detect Disease</a>'
+        f'<a href="/About_Aura_Farming" target="_self">About</a>'
+        f'</nav>'
+        f'</div>'
     )
+    st.markdown(navbar_html, unsafe_allow_html=True)
 
 
 def render_section_heading(title: str, subtitle: str = "") -> None:
@@ -485,16 +456,12 @@ def render_section_heading(title: str, subtitle: str = "") -> None:
         subtitle: Optional supporting text rendered below the rule.
     """
     st.markdown(
-        f"""
-        <h2 class="af-section-heading">{title}</h2>
-        <hr class="af-section-rule">
-        """,
+        f'<h2 class="af-section-heading">{title}</h2><hr class="af-section-rule">',
         unsafe_allow_html=True,
     )
     if subtitle:
         st.markdown(
-            f'<p style="color:{Colors.DARK_EARTH}; margin-bottom:1.5rem;">'
-            f'{subtitle}</p>',
+            f'<p style="color:{Colors.DARK_EARTH}; margin-bottom:1.5rem;">{subtitle}</p>',
             unsafe_allow_html=True,
         )
 
@@ -550,20 +517,18 @@ def render_success(message: str) -> None:
 
 def render_footer() -> None:
     """Render the Aura Farming page footer."""
-    st.markdown(
-        f"""
-        <div class="af-footer">
-          <strong>Aura Farming</strong> &nbsp;·&nbsp;
-          An AI-Powered, Reliability-Aware Crop Disease Detection System<br>
-          <span style="margin-top:0.3rem; display:block;">
-            Research prototype only &nbsp;·&nbsp;
-            Not a validated diagnostic tool &nbsp;·&nbsp;
-            Consult a qualified agricultural expert for treatment decisions
-          </span>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    footer_html = (
+        f'<div class="af-footer">'
+        f'<strong>Aura Farming</strong> &nbsp;·&nbsp; '
+        f'An AI-Powered, Reliability-Aware Crop Disease Detection System<br>'
+        f'<span style="margin-top:0.3rem; display:block;">'
+        f'Research prototype only &nbsp;·&nbsp; '
+        f'Not a validated diagnostic tool &nbsp;·&nbsp; '
+        f'Consult a qualified agricultural expert for treatment decisions'
+        f'</span>'
+        f'</div>'
     )
+    st.markdown(footer_html, unsafe_allow_html=True)
 
 
 def render_feature_card(icon: str, title: str, description: str) -> None:
@@ -575,16 +540,14 @@ def render_feature_card(icon: str, title: str, description: str) -> None:
         title: Card heading text.
         description: Card body text (1–2 sentences).
     """
-    st.markdown(
-        f"""
-        <div class="af-feature-card">
-          <span class="af-icon">{icon}</span>
-          <h4>{title}</h4>
-          <p>{description}</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    card_html = (
+        f'<div class="af-feature-card">'
+        f'<span class="af-icon">{icon}</span>'
+        f'<h4>{title}</h4>'
+        f'<p>{description}</p>'
+        f'</div>'
     )
+    st.markdown(card_html, unsafe_allow_html=True)
 
 
 def render_workflow_step(number: int, title: str, description: str) -> None:
@@ -596,15 +559,13 @@ def render_workflow_step(number: int, title: str, description: str) -> None:
         title: Step heading.
         description: Brief explanation of the step.
     """
-    st.markdown(
-        f"""
-        <div class="af-step">
-          <div class="af-step-number">{number}</div>
-          <div class="af-step-text">
-            <strong>{title}</strong>
-            <span>{description}</span>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    step_html = (
+        f'<div class="af-step">'
+        f'<div class="af-step-number">{number}</div>'
+        f'<div class="af-step-text">'
+        f'<strong>{title}</strong>'
+        f'<span>{description}</span>'
+        f'</div>'
+        f'</div>'
     )
+    st.markdown(step_html, unsafe_allow_html=True)

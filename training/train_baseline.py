@@ -99,6 +99,13 @@ import yaml
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 from training.dataset_utils import load_manifest
 
 
@@ -740,7 +747,7 @@ def update_config_weights_path(weights_path: Path) -> None:
         weights_path: Absolute path to the saved .keras file.
     """
     config_path = PROJECT_ROOT / "configs" / "config.yaml"
-    rel = str(weights_path.relative_to(PROJECT_ROOT))
+    rel = weights_path.relative_to(PROJECT_ROOT).as_posix()
 
     with open(config_path) as f:
         text = f.read()
@@ -816,6 +823,10 @@ Examples:
     p.add_argument(
         "--from-config", action="store_true",
         help="Use all training settings from config.yaml (ignore other CLI args)",
+    )
+    p.add_argument(
+        "--skip-phase-a", action="store_true",
+        help="Skip Phase A training and start directly from existing Phase A checkpoint for fine-tuning",
     )
     return p.parse_args()
 
@@ -925,34 +936,39 @@ def main():
     # ─────────────────────────────────────────────────────────────
     # Phase A — Feature extraction
     # ─────────────────────────────────────────────────────────────
-    print(f"\n{'─'*60}")
-    print(f"  Phase A: Feature Extraction (base layers frozen)")
-    print(f"{'─'*60}")
+    if not args.skip_phase_a:
+        print(f"\n{'─'*60}")
+        print(f"  Phase A: Feature Extraction (base layers frozen)")
+        print(f"{'─'*60}")
 
-    model = build_model(num_classes, input_size, dropout)
-    model.summary(print_fn=lambda x: print(f"  {x}"))
+        model = build_model(num_classes, input_size, dropout)
+        model.summary(print_fn=lambda x: print(f"  {x}"))
 
-    callbacks_a = build_callbacks(ckpt_a, patience_a, "phase_a")
+        callbacks_a = build_callbacks(ckpt_a, patience_a, "phase_a")
 
-    history_a = model.fit(
-        train_ds,
-        validation_data=val_ds,
-        epochs=epochs_a,
-        callbacks=callbacks_a,
-        class_weight=class_weights,
-        verbose=1,
-    )
+        history_a = model.fit(
+            train_ds,
+            validation_data=val_ds,
+            epochs=epochs_a,
+            callbacks=callbacks_a,
+            class_weight=class_weights,
+            verbose=1,
+        )
 
-    print(f"\n  ✓  Phase A complete.")
-    print(f"     Epochs run     : {len(history_a.epoch)}")
-    print(f"     Best model     : {ckpt_a}")
+        print(f"\n  ✓  Phase A complete.")
+        print(f"     Epochs run     : {len(history_a.epoch)}")
+        print(f"     Best model     : {ckpt_a}")
 
-    save_history(history_a, reports_dir, "phase_a")
+        save_history(history_a, reports_dir, "phase_a")
 
-    metrics_a = evaluate_on_validation(
-        model, val_ds, val_labels, class_names,
-        output_dir=reports_dir, phase_label="phase_a",
-    )
+        metrics_a = evaluate_on_validation(
+            model, val_ds, val_labels, class_names,
+            output_dir=reports_dir, phase_label="phase_a",
+        )
+    else:
+        print(f"\n{'─'*60}")
+        print(f"  Phase A: Skipped (loading existing checkpoint: {ckpt_a})")
+        print(f"{'─'*60}")
 
     # ─────────────────────────────────────────────────────────────
     # Phase B — Fine-tuning (optional)

@@ -87,36 +87,36 @@ workflow_items = [
         "Before running the AI model, the system checks the photograph for "
         "basic quality issues: is it blurry? Is it too dark or too bright? "
         "Images that are too poor in quality are flagged so they don't "
-        "produce unreliable predictions. (This feature is being built in Phase 5.)",
+        "produce unreliable predictions.",
     ),
     (
         "🧠", "Deep Learning Classification",
         "A MobileNetV3 neural network — pretrained on millions of images "
         "and fine-tuned on tomato leaf disease photographs — analyses the "
         "validated image and produces a probability score for each possible "
-        "disease class. (Connected in Phase 4.)",
+        "disease class.",
     ),
     (
         "🛡️", "Reliability Assessment",
         "Raw model probabilities are not reliable confidence estimates. "
-        "Aura Farming applies calibration to adjust these scores, then "
+        "Aura Farming applies temperature scaling calibration to adjust these scores, then "
         "compares the result against a validated threshold. If confidence "
         "is too low, the system returns an 'uncertain' status rather than "
-        "a potentially wrong disease label. (Phase 5.)",
+        "a potentially wrong disease label.",
     ),
     (
         "🌿", "Visual Explanation (Grad-CAM)",
         "For confident predictions, a Grad-CAM heatmap is generated and "
         "overlaid on the original photograph. This shows which parts of "
         "the leaf most influenced the model's decision — making the AI "
-        "process more transparent. (Phase 5.)",
+        "process more transparent.",
     ),
     (
         "📋", "Results and Guidance",
         "The results page displays the predicted condition, reliability "
         "status, heatmap, and general prevention information sourced from "
         "authoritative agricultural references. All results include a clear "
-        "disclaimer that this is not a professional diagnosis. (Phase 5–6.)",
+        "disclaimer that this is not a professional diagnosis.",
     ),
 ]
 
@@ -197,11 +197,11 @@ render_section_heading("Development Status")
 phases = [
     ("✅", "Phase 1", "Specification and planning", "Complete"),
     ("✅", "Phase 2", "Project foundation and initial UI", "Complete"),
-    ("🔲", "Phase 3", "Dataset inspection and preparation", "Upcoming"),
-    ("🔲", "Phase 4", "Baseline MobileNetV3 model training", "Upcoming"),
-    ("🔲", "Phase 5", "Quality gate, calibration, Grad-CAM", "Upcoming"),
-    ("🔲", "Phase 6", "Full application integration", "Upcoming"),
-    ("🔲", "Phase 7", "Evaluation and experiments", "Upcoming"),
+    ("✅", "Phase 3", "Dataset inspection and preparation", "Complete"),
+    ("✅", "Phase 4", "Baseline MobileNetV3 model training", "Complete"),
+    ("✅", "Phase 5", "Quality gate, calibration, Grad-CAM", "Complete"),
+    ("✅", "Phase 6", "Full application integration", "Complete"),
+    ("✅", "Phase 7", "Evaluation and experiments", "Complete"),
     ("🔲", "Phase 8", "Final polish and documentation", "Upcoming"),
 ]
 

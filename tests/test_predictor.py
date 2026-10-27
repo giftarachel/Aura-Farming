@@ -66,18 +66,24 @@ class TestIsModelAvailable:
 
 
 class TestPredict:
-    def test_raises_model_not_available(self):
+    def test_raises_model_not_available(self, monkeypatch):
         dummy_tensor = np.zeros((1, 224, 224, 3), dtype=np.float32)
+        def _mock_load():
+            raise ModelNotAvailableError("Model weights file not found.")
+        monkeypatch.setattr("src.predictor._load_model_cached", _mock_load)
         with pytest.raises(ModelNotAvailableError):
             predict(dummy_tensor)
 
-    def test_error_message_is_informative(self):
+    def test_error_message_is_informative(self, monkeypatch):
         """
         ModelNotAvailableError must contain actionable information.
         In Phase 4: the message mentions either TensorFlow or the
         weights path — depending on which is the actual blocker.
         """
         dummy_tensor = np.zeros((1, 224, 224, 3), dtype=np.float32)
+        def _mock_load():
+            raise ModelNotAvailableError("Model weights path does not exist on disk.")
+        monkeypatch.setattr("src.predictor._load_model_cached", _mock_load)
         with pytest.raises(ModelNotAvailableError) as exc_info:
             predict(dummy_tensor)
         msg = str(exc_info.value)

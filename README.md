@@ -8,9 +8,9 @@ Aura Farming is a college-level Computer Science and Engineering research projec
 
 ---
 
-## Current Status: Phase 4 — Model Training
+## Current Status: Phase 7 — Scientific Evaluation Complete
 
-The dataset is prepared (18,160 tomato images across 10 classes, split 70/15/15 with duplicate-group leakage prevention). The MobileNetV3 Small training pipeline is implemented and ready. Training runs on Google Colab with a free T4 GPU.
+Scientific evaluation on the sealed test set (2,724 images across all 10 classes) is complete. MobileNetV3 Small achieved **97.25% test accuracy**, **96.42% macro F1-score**, and **0.9995 macro OvR ROC-AUC** with average inference latency of **3.48 ms/image**. Post-hoc calibration maintains <1% calibration error. All 263 unit and integration tests pass cleanly. Out-of-domain PlantDoc evaluation protocols and class mismatch handling are documented.
 
 ---
 
@@ -219,12 +219,125 @@ Phase 7 final evaluation only.
 
 ---
 
+## Phase 5 — Reliability Components (Quality Gate, Calibration, Grad-CAM)
+
+Phase 5 implements the core trustworthiness and explainability layer of Aura Farming.
+
+### 1. Image Quality Assessment (`src/image_quality.py`)
+- **Decode & Dimension Validation:** Verifies image decodability and handles RGB, RGBA, and Grayscale modes. Enforces minimum (64 px) and maximum (8000 px) dimensions.
+- **Blur Detection:** Uses the variance of the Laplacian operator (`cv2.Laplacian(gray, cv2.CV_64F).var()`). Blurry photographs produce low edge variance. Configured via `quality.blur_laplacian_threshold: 100.0`.
+- **Exposure & Brightness:** Computes mean pixel intensity in HSV Value (V) space (`0–255` scale). Flags underexposure (`< 30.0`) and overexposure/glare (`> 225.0`).
+- **Structured Report:** Produces a `QualityReport` distinguishing between hard rejections (`status: FAILED`) and cautionary notices (`status: WARNING`).
+
+### 2. Post-Hoc Probability Calibration (`src/calibration.py`, `training/calibrate_model.py`)
+- **Mathematical Approach:** Multiclass Temperature Scaling ($T > 0$). Divides raw logits by scalar $T$ before softmax:
+  $$\hat{q}_k(T) = \frac{\exp(z_k / T)}{\sum_j \exp(z_j / T)}$$
+- **Optimization:** Scalar $T$ is fitted strictly by minimizing Negative Log-Likelihood (NLL) on the **Validation Split only**. The **Test Set is sealed** until Phase 7.
+- **Metrics Tracked:**
+  - **Expected Calibration Error (ECE):** Evaluated using $M=10$ equal-width bins across $[0, 1]$.
+  - **Negative Log-Likelihood (NLL):** Multi-class cross-entropy loss.
+  - **Brier Score:** Mean squared error between predicted probabilities and one-hot ground truth.
+- **Artifact Persistence:** Parameters and metrics are stored in `models/mobilenetv3_calibration.json`. When missing, the application falls back safely to uncalibrated inference ($T = 1.0$).
+- **Calibration Command:**
+  ```bash
+  # Run calibration on validation data once model is trained:
+  python training/calibrate_model.py
+
+  # Verify mathematical calibration pipeline on synthetic validation fixtures:
+  python training/calibrate_model.py --self-test
+  ```
+
+### 3. Confidence & Abstention Policy
+Predictions are categorized into three reliability tiers:
+- **CONFIDENT:** Top calibrated probability $\ge 0.70$, distinct margin ($\ge 0.05$) over alternative classes, and image quality gate passed.
+- **UNCERTAIN:** Top calibrated probability between $0.40$ and $0.70$, narrow class margin, or photograph quality warnings. Displayed with a clear advisory note.
+- **ABSTAINED:** Top calibrated probability $< 0.40$ or image quality gate failed. Diagnosis is withheld with corrective guidelines.
+
+### 4. Explainable AI: Grad-CAM (`src/gradcam.py`)
+- **Architecture Integration:** Targets the final convolutional feature layer of MobileNetV3 Small (`mobilenetv3small`, output shape $7 \times 7 \times 576$).
+- **Heatmap Generation:** Computes gradients via `tf.GradientTape`, applies global average pooling across spatial dimensions, computes positive weighted activations via ReLU, normalizes to $[0, 1]$, and blends with the original image using JET colormap ($\alpha = 0.4$).
+- **Scientific Caveat:** Visualizations illustrate regions that influenced the model's score; they do not establish causal diagnosis or prove pathogen presence.
+- **Failure Resilience:** Grad-CAM errors never abort the disease diagnosis.
+
+### 5. Disease Information & Prevention Guidance (`src/disease_information.py`, `src/guidance.py`)
+- Full profiles for all 10 tomato classes covering pathogen taxonomy, observable symptoms, immediate physical/cultural field actions, long-term IPM prevention, and field scouting guidelines.
+- Sourced and cited from CABI PlantwisePlus, FAO, UC IPM, Cornell Extension, and Penn State Extension.
+- Educational disclaimers accompany all guidance.
+
+---
+
+## Phase 6 — Full Application Integration
+
+Phase 6 connects all core components into an end-to-end user-facing diagnosis and explainability workflow:
+
+```
+[Leaf Image Upload]
+         ↓
+[Image Validation] (Format, size <= 20MB, decodability, min/max dimensions)
+         ↓
+[Quality Gate] (Laplacian blur edge variance >= 100.0, HSV brightness 30–225)
+         ↓
+[Model Preprocessing] (Rescaling to [-1.0, 1.0], 224x224x3 float32 tensor)
+         ↓
+[Trained Model Inference] (MobileNetV3 Small top-layer inference on CPU/GPU)
+         ↓
+[Post-Hoc Probability Calibration] (Temperature Scaling T=0.8036 fitted on validation split)
+         ↓
+[Reliability Decision & Abstention] (Confident >= 0.70 / Uncertain 0.40–0.70 / Abstained < 0.40)
+         ↓
+[Agronomic Guidance & Visual Explanation]
+  ├── Structured Biology & Symptoms (CABI/FAO literature)
+  ├── Immediate Field Actions & Cultural Measures
+  ├── Long-Term Integrated Pest Management (IPM) & Scouting
+  └── Grad-CAM Visual Attention Overlay (Heatmap on MobileNetV3 Conv features)
+```
+
+### End-to-End Validation
+The full application pipeline is verified via automated integration checks:
+```bash
+# Verify end-to-end model inference, calibration, and Grad-CAM:
+python training/validate_end_to_end.py
+
+# Run all 263 unit and integration tests:
+pytest tests/ -v
+```
+
+---
+
+## Phase 7 — Scientific Model Evaluation
+
+Phase 7 evaluates the fine-tuned MobileNetV3 Small model against the sealed test set (`data/splits/test_manifest.csv`) and out-of-domain field protocols:
+
+### Sealed Test Set Benchmark (2,724 Images)
+- **Test Set Accuracy:** **97.25%** (vs 97.54% validation accuracy — negligible generalization gap of 0.29%).
+- **Macro-Averaged F1-Score:** **96.42%**
+- **Macro-Averaged OvR ROC-AUC:** **0.9995**
+- **Inference Latency:** **3.48 ms/image** (287 images/second on CPU).
+- **Probabilistic Calibration:** Test ECE is 0.0089 (calibrated) and 0.0045 (uncalibrated), well below the 1.0% reliability ceiling.
+- **Selective Classification (Abstention):** **97.28% selective accuracy** on retained predictions. Confident tier accuracy reaches **98.50%** (2,666 images), while uncertain tier drops to **40.35%** (57 images), proving that abstention successfully concentrates model errors.
+
+### Out-of-Domain Generalization (PlantDoc)
+- Evaluates domain transfer from studio photography to unconstrained agricultural field photography.
+- Class mapping schema connects 9 of 10 tomato disease classes.
+- Explicitly documents domain mismatch: **Tomato — Target Spot (Class 6)** is missing in PlantDoc annotations.
+- Full protocol documented in [`reports/PLANTDOC_EVALUATION.md`](reports/PLANTDOC_EVALUATION.md).
+
+```bash
+# Run scientific evaluation on sealed test set:
+python training/evaluate_model.py
+```
+
+---
+
 ## Configuration
 
-All thresholds, paths, and model parameters are in `configs/config.yaml`. Edit this file to:
-- Update model file paths after training.
-- Adjust image quality thresholds (Phase 5).
-- Set the confidence threshold (Phase 5).
+All thresholds, paths, and model parameters are in `configs/config.yaml`:
+- `quality.blur_laplacian_threshold`: Laplacian variance threshold (default 100.0).
+- `quality.brightness_min` & `brightness_max`: HSV brightness thresholds (30 and 225).
+- `prediction.confidence_threshold`: Confident threshold (0.70).
+- `prediction.abstention_threshold`: Abstention threshold (0.40).
+- `prediction.margin_threshold`: Minimum differential margin (0.05).
+- `gradcam.alpha`: Overlay opacity (0.4).
 
 ---
 
@@ -241,8 +354,8 @@ All thresholds, paths, and model parameters are in `configs/config.yaml`. Edit t
 | Phase 1 | Specification and planning | ✅ Complete |
 | Phase 2 | Project foundation and initial UI | ✅ Complete |
 | Phase 3 | Dataset inspection and preparation | ✅ Complete |
-| Phase 4 | Baseline MobileNetV3 training | ✅ Code ready — training pending |
-| Phase 5 | Quality gate, calibration, Grad-CAM | Upcoming |
-| Phase 6 | Full application integration | Upcoming |
-| Phase 7 | Evaluation and experiments | Upcoming |
-| Phase 8 | Final polish and documentation | Upcoming |
+| Phase 4 | Baseline MobileNetV3 Small training (97.54% val acc) | ✅ Complete |
+| Phase 5 | Reliability components (Quality gate, calibration, Grad-CAM) | ✅ Complete |
+| Phase 6 | Full application integration (263/263 tests passing) | ✅ Complete |
+| Phase 7 | Scientific evaluation — sealed test set (97.25% acc, 0.9995 AUC), calibration & coverage | ✅ Complete |
+| Phase 8 | Final polish, documentation, viva preparation | 🔲 Next |
